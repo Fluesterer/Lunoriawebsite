@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shop – Lunoria.net</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<nav>
+    <div class="logo">Lunoria<span>.net</span></div>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html" class="active">Shop</a></li>
+        <li><a href="team.html">Team</a></li>
+        <li><a href="info.html">Serverinfo</a></li>
+    </ul>
+</nav>
+
+<section class="section">
+    <h1>Wähle deinen Rang</h1>
+    <div class="rank-grid">
+        <div class="rank-card" onclick="showRank('ultra')" tabindex="0" title="Ultra">
+            <h2>Ultra</h2>
+            <p>Der beste Rang mit allen exklusiven Extras.</p>
+        </div>
+        <div class="rank-card" onclick="showRank('elite')" tabindex="0" title="Elite">
+            <h2>Elite</h2>
+            <p>Sehr stark, viele Extras und Vorteile.</p>
+        </div>
+        <div class="rank-card" onclick="showRank('vip')" tabindex="0" title="VIP">
+            <h2>VIP</h2>
+            <p>Beliebter Rang mit nützlichen Extras.</p>
+        </div>
+        <div class="rank-card no-hover" tabindex="0" title="Player">
+            <h2>Player</h2>
+            <p>Standard Rang für alle Spieler.</p>
+        </div>
+    </div>
+</section>
+
+<div class="rank-detail" id="rankDetail">
+    <button class="close-btn" onclick="closeRank()">Schließen ✖</button>
+    <h3 id="rankTitle">Titel</h3>
+    <ul id="rankPerks">
+        <!-- Perks kommen per JS rein -->
+    </ul>
+</div>
+
+<footer>
+    &copy; 2025 Lunoria.net – Dein Shop für Ränge.
+</footer>
+
+<script>
+    const ranks = {
+        ultra: {
+            title: 'Ultra',
+            perks: [
+                'Alle anderen Ränge enthalten',
+                'Exklusive PvP Items',
+                'Größeres Inventar',
+                'Eigenes Haus',
+                'VIP-Bereich Zugang',
+                'Custom Pets',
+                'Priorisierter Support',
+            ]
+        },
+        elite: {
+            title: 'Elite',
+            perks: [
+                'VIP Perks enthalten',
+                'Schnelleres Leveln',
+                'Bessere Ausrüstung',
+                'Zugang zu Elite-Events',
+                'Schöne Haustiere',
+            ]
+        },
+        vip: {
+            title: 'VIP',
+            perks: [
+                'Kleines Starterpaket',
+                'VIP Chat',
+                'Ein paar Extras im Spiel',
+                'Kleiner Bonus beim Leveln',
+            ]
+        },
+        player: {
+            title: 'Player',
+            perks: [
+                'Standard Minecraft Spieler',
+                'Keine Extras',
+            ]
+        }
+    };
+
+    function showRank(rank) {
+        const detail = document.getElementById('rankDetail');
+        const title = document.getElementById('rankTitle');
+        const perksList = document.getElementById('rankPerks');
+        const rankInfo = ranks[rank];
+        if (!rankInfo) return;
+
+        title.textContent = rankInfo.title;
+        perksList.innerHTML = '';
+        rankInfo.perks.forEach(perk => {
+            const li = document.createElement('li');
+            li.textContent = perk;
+            perksList.appendChild(li);
+        });
+
+        detail.classList.add('active');
+    }
+
+    function closeRank() {
+        document.getElementById('rankDetail').classList.remove('active');
+    }
+</script>
+</body>
+</html>
