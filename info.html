@@ -5,6 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Serverinfo – Lunoria.net</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #eee;
+            margin: 0; padding: 0;
+        }
+        nav {
+            background-color: #222;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        nav .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #7ee787;
+        }
+        nav ul {
+            list-style: none;
+            margin-left: auto;
+            display: flex;
+            gap: 1.5rem;
+        }
+        nav ul li a {
+            color: #eee;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        nav ul li a.active,
+        nav ul li a:hover {
+            color: #7ee787;
+        }
+        section.section {
+            max-width: 600px;
+            margin: 2rem auto;
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(126, 231, 135, 0.5);
+        }
+        .status-online {
+            color: #7ee787;
+            font-weight: bold;
+        }
+        .status-offline {
+            color: #e06666;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <nav>
@@ -20,7 +70,43 @@
 <section class="section">
     <h1>Serverstatus</h1>
     <p><strong>IP-Adresse:</strong> play.lunoria.net</p>
-    <p><strong>Status:</strong> <span id="status" class="status-online">Online</span></p>
-    <p><strong>Spieler online:</strong> <span id="players">5</span> / 16</p>
-    <p><strong>Nächster Auto-Kick in:</strong> <span id="kick-timer">60:00</span> Minuten</p>
-    <p style="margin-top: 1rem; font-style: italic; color: #7ee787;">
+    <p><strong>Status:</strong> <span id="status" class="status-offline">Offline</span></p>
+    <p><strong>Spieler online:</strong> <span id="players">0</span> / 16</p>
+    <p><strong>Nächster Auto-Kick in:</strong> <span id="kick-timer">--:--</span> Minuten</p>
+</section>
+
+<script>
+async function fetchServerStatus() {
+    try {
+        const response = await fetch('http://deine-server-ip:8080/status'); // Hier die IP und Port anpassen
+        if (!response.ok) throw new Error('Server nicht erreichbar');
+        const data = await response.json();
+
+        const statusSpan = document.getElementById('status');
+        if(data.online) {
+            statusSpan.textContent = "Online";
+            statusSpan.className = 'status-online';
+        } else {
+            statusSpan.textContent = "Offline";
+            statusSpan.className = 'status-offline';
+        }
+
+        document.getElementById('players').textContent = data.playerCount;
+        document.getElementById('kick-timer').textContent = data.kickTimer || '--:--';
+
+    } catch (e) {
+        console.error('Fehler beim Laden der Serverdaten:', e);
+        const statusSpan = document.getElementById('status');
+        statusSpan.textContent = 'Fehler';
+        statusSpan.className = 'status-offline';
+        document.getElementById('players').textContent = '0';
+        document.getElementById('kick-timer').textContent = '--:--';
+    }
+}
+
+// Alle 10 Sekunden aktualisieren
+fetchServerStatus();
+setInterval(fetchServerStatus, 10000);
+</script>
+</body>
+</html>
